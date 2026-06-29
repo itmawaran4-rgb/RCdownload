@@ -1,1 +1,349 @@
-ف
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>RC App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #F97316;
+      --orange-dark: #C2410C;
+      --orange-glow: rgba(249,115,22,0.18);
+      --black: #0A0A0A;
+      --card: #141414;
+      --border: rgba(249,115,22,0.22);
+      --text: #F5F5F5;
+      --muted: #9A9A9A;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Cairo', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px 20px 40px;
+      background:
+        radial-gradient(ellipse 70% 50% at 50% 0%, rgba(249,115,22,0.12) 0%, transparent 65%),
+        var(--black);
+    }
+
+    /* ── Lang switcher ── */
+    .lang-bar {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 6px;
+      background: rgba(20,20,20,0.85);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 10px;
+      backdrop-filter: blur(10px);
+      z-index: 100;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'Cairo', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .03em;
+    }
+    .lang-btn.active, .lang-btn:hover {
+      background: var(--orange);
+      color: #fff;
+    }
+
+    /* ── Card ── */
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 40px 28px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      box-shadow: 0 0 60px rgba(249,115,22,0.08), 0 20px 60px rgba(0,0,0,.6);
+      margin-top: 60px;
+    }
+
+    /* ── Logo ── */
+    .logo-wrap {
+      width: 110px;
+      height: 110px;
+      border-radius: 26px;
+      background: var(--black);
+      border: 2px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      margin-bottom: 22px;
+      box-shadow: 0 0 30px rgba(249,115,22,0.15);
+    }
+    .logo-wrap img {
+      width: 90%;
+      height: 90%;
+      object-fit: contain;
+    }
+
+    /* ── Text ── */
+    .app-name {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--orange);
+      letter-spacing: .04em;
+      text-align: center;
+      line-height: 1.1;
+    }
+    .app-tagline {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 6px;
+      margin-bottom: 34px;
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .divider-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Buttons ── */
+    .btn-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      font-family: 'Cairo', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      transition: transform .18s, box-shadow .18s, background .18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-android {
+      background: linear-gradient(135deg, var(--orange) 0%, var(--orange-dark) 100%);
+      color: #fff;
+      box-shadow: 0 6px 28px rgba(249,115,22,0.35);
+    }
+    .btn-android:hover, .btn-android:active {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(249,115,22,0.5);
+    }
+    .btn-android:active { transform: translateY(0); }
+
+    .btn-ios {
+      background: transparent;
+      color: var(--orange);
+      border: 1.5px solid var(--orange);
+      box-shadow: inset 0 0 0 0 var(--orange);
+    }
+    .btn-ios:hover, .btn-ios:active {
+      background: var(--orange-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(249,115,22,0.18);
+    }
+    .btn-ios:active { transform: translateY(0); }
+
+    .btn-icon {
+      width: 26px;
+      height: 26px;
+      flex-shrink: 0;
+      fill: currentColor;
+    }
+
+    .btn-text-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      line-height: 1.2;
+    }
+    .btn-sub {
+      font-size: 10.5px;
+      font-weight: 400;
+      opacity: .75;
+    }
+    .btn-main {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    /* ── Footer ── */
+    .footer {
+      margin-top: 28px;
+      font-size: 11.5px;
+      color: #444;
+      text-align: center;
+      letter-spacing: .02em;
+    }
+
+    /* ── RTL/LTR ── */
+    [dir="ltr"] .btn-text-wrap { align-items: flex-start; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .btn { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Language switcher -->
+  <div class="lang-bar" role="group" aria-label="Language">
+    <button class="lang-btn" onclick="setLang('ar')">عربي</button>
+    <button class="lang-btn" onclick="setLang('ku')">کوردی</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="card">
+    <!-- Logo -->
+    <div class="logo-wrap">
+      <img src="logo2.png" alt="RC App Logo" />
+    </div>
+
+    <div class="app-name" id="txt-name">RC App</div>
+    <div class="app-tagline" id="txt-tagline">خدمات السيارات في متناول يدك</div>
+
+    <div class="divider"><span class="divider-label" id="txt-divider">تحميل التطبيق</span></div>
+
+    <div class="btn-group">
+      <!-- Android -->
+      <a class="btn btn-android" href="RC app.apk" download="RC app.apk" id="btn-android">
+        <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M17.523 15.34a.75.75 0 01-.75.75H7.227a.75.75 0 010-1.5h9.546a.75.75 0 01.75.75zM6.545 9.254a.75.75 0 011.06 0L12 13.648l4.395-4.394a.75.75 0 111.06 1.06l-4.924 4.925a.75.75 0 01-1.062 0L6.545 10.314a.75.75 0 010-1.06z"/>
+          <path d="M12 2.25A9.75 9.75 0 1021.75 12 9.761 9.761 0 0012 2.25zm0 18A8.25 8.25 0 1120.25 12 8.26 8.26 0 0112 20.25z"/>
+        </svg>
+        <div class="btn-text-wrap">
+          <span class="btn-sub" id="txt-and-sub">تحميل لـ</span>
+          <span class="btn-main">Android</span>
+        </div>
+      </a>
+
+      <!-- iOS -->
+      <a class="btn btn-ios" href="https://itmawaran4-rgb.github.io/RC/" target="_blank" rel="noopener" id="btn-ios">
+        <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+        </svg>
+        <div class="btn-text-wrap">
+          <span class="btn-sub" id="txt-ios-sub">فتح لـ</span>
+          <span class="btn-main">iPhone / iOS</span>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="footer" id="txt-footer">© 2025 RC App · جميع الحقوق محفوظة</div>
+
+  <script>
+    const translations = {
+      ar: {
+        dir: 'rtl', lang: 'ar',
+        name: 'RC App',
+        tagline: 'خدمات السيارات في متناول يدك',
+        divider: 'تحميل التطبيق',
+        andSub: 'تحميل لـ',
+        iosSub: 'فتح لـ',
+        footer: '© 2025 RC App · جميع الحقوق محفوظة'
+      },
+      ku: {
+        dir: 'rtl', lang: 'ku',
+        name: 'RC App',
+        tagline: 'خزمەتگوزارییەکانی ئوتومبێل لە دەستت دایە',
+        divider: 'داگرتنی ئەپ',
+        andSub: 'داگرتن بۆ',
+        iosSub: 'کراوەکردن بۆ',
+        footer: '© 2025 RC App · هەموو مافەکان پارێزراون'
+      },
+      en: {
+        dir: 'ltr', lang: 'en',
+        name: 'RC App',
+        tagline: 'Car services at your fingertips',
+        divider: 'Download the App',
+        andSub: 'Download for',
+        iosSub: 'Open for',
+        footer: '© 2025 RC App · All rights reserved'
+      }
+    };
+
+    function setLang(code) {
+      const t = translations[code];
+      document.documentElement.dir = t.dir;
+      document.documentElement.lang = t.lang;
+      document.getElementById('txt-name').textContent = t.name;
+      document.getElementById('txt-tagline').textContent = t.tagline;
+      document.getElementById('txt-divider').textContent = t.divider;
+      document.getElementById('txt-and-sub').textContent = t.andSub;
+      document.getElementById('txt-ios-sub').textContent = t.iosSub;
+      document.getElementById('txt-footer').textContent = t.footer;
+
+      document.querySelectorAll('.lang-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', ['ar','ku','en'][i] === code);
+      });
+    }
+
+    // Auto-detect browser language
+    function detectLang() {
+      const l = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+      if (l.startsWith('ku') || l.startsWith('ckb')) return 'ku';
+      if (l.startsWith('en')) return 'en';
+      return 'ar';
+    }
+
+    setLang(detectLang());
+  </script>
+</body>
+</html>
