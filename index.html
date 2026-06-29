@@ -185,20 +185,16 @@
       transform: translateY(-2px);
       box-shadow: 0 10px 36px rgba(249,115,22,0.5);
     }
-    .btn-android:active { transform: translateY(0); }
 
     .btn-ios {
       background: transparent;
       color: var(--orange);
       border: 1.5px solid var(--orange);
-      box-shadow: inset 0 0 0 0 var(--orange);
     }
     .btn-ios:hover, .btn-ios:active {
       background: var(--orange-glow);
       transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(249,115,22,0.18);
     }
-    .btn-ios:active { transform: translateY(0); }
 
     .btn-icon {
       width: 26px;
@@ -223,26 +219,82 @@
       font-weight: 800;
     }
 
+    /* ── Install Toast ── */
+    .install-toast {
+      display: none;
+      width: 100%;
+      margin-top: 18px;
+      background: #1a1a1a;
+      border: 1px solid var(--orange);
+      border-radius: 16px;
+      padding: 16px 18px;
+      gap: 0;
+      animation: slideUp .35s cubic-bezier(.22,1,.36,1);
+    }
+    .install-toast.show { display: block; }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13.5px;
+      font-weight: 800;
+      color: var(--orange);
+      margin-bottom: 12px;
+    }
+    .toast-title svg { width: 18px; height: 18px; fill: var(--orange); flex-shrink: 0; }
+
+    .toast-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .toast-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .step-text b { color: var(--orange); font-weight: 700; }
+
     /* ── Footer ── */
     .footer {
       margin-top: 28px;
       font-size: 11.5px;
       color: #444;
       text-align: center;
-      letter-spacing: .02em;
     }
 
-    /* ── RTL/LTR ── */
-    [dir="ltr"] .btn-text-wrap { align-items: flex-start; }
-
     @media (prefers-reduced-motion: reduce) {
-      .btn { transition: none; }
+      .btn, .install-toast { transition: none; animation: none; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Language switcher -->
   <div class="lang-bar" role="group" aria-label="Language">
     <button class="lang-btn" onclick="setLang('ar')">عربي</button>
     <button class="lang-btn" onclick="setLang('ku')">کوردی</button>
@@ -250,7 +302,6 @@
   </div>
 
   <div class="card">
-    <!-- Logo -->
     <div class="logo-wrap">
       <img src="logo2.png" alt="RC App Logo" />
     </div>
@@ -261,11 +312,11 @@
     <div class="divider"><span class="divider-label" id="txt-divider">تحميل التطبيق</span></div>
 
     <div class="btn-group">
+
       <!-- Android -->
-      <a class="btn btn-android" href="RC app.apk" download="RC app.apk" id="btn-android">
-        <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.523 15.34a.75.75 0 01-.75.75H7.227a.75.75 0 010-1.5h9.546a.75.75 0 01.75.75zM6.545 9.254a.75.75 0 011.06 0L12 13.648l4.395-4.394a.75.75 0 111.06 1.06l-4.924 4.925a.75.75 0 01-1.062 0L6.545 10.314a.75.75 0 010-1.06z"/>
-          <path d="M12 2.25A9.75 9.75 0 1021.75 12 9.761 9.761 0 0012 2.25zm0 18A8.25 8.25 0 1120.25 12 8.26 8.26 0 0112 20.25z"/>
+      <a class="btn btn-android" href="RC app.apk" download="RC app.apk" onclick="showInstallGuide()">
+        <svg class="btn-icon" viewBox="0 0 24 24">
+          <path d="M6 18c0 .55.45 1 1 1h1v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h2v3.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5V19h1c.55 0 1-.45 1-1V8H6v10zM3.5 8C2.67 8 2 8.67 2 9.5v7c0 .83.67 1.5 1.5 1.5S5 17.33 5 16.5v-7C5 8.67 4.33 8 3.5 8zm17 0c-.83 0-1.5.67-1.5 1.5v7c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-7c0-.83-.67-1.5-1.5-1.5zm-4.97-5.84l1.3-1.3c.2-.2.2-.51 0-.71-.2-.2-.51-.2-.71 0l-1.48 1.48A5.84 5.84 0 0012 1.5c-.73 0-1.42.14-2.06.39L8.46.41c-.2-.2-.51-.2-.71 0-.2.2-.2.51 0 .71l1.3 1.3A5.957 5.957 0 006 7h12a5.96 5.96 0 00-2.47-4.84zM10 5H9V4h1v1zm5 0h-1V4h1v1z"/>
         </svg>
         <div class="btn-text-wrap">
           <span class="btn-sub" id="txt-and-sub">تحميل لـ</span>
@@ -273,9 +324,35 @@
         </div>
       </a>
 
+      <!-- Install guide (appears after download) -->
+      <div class="install-toast" id="install-toast">
+        <div class="toast-title">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+          <span id="txt-toast-title">كيفية تثبيت التطبيق</span>
+        </div>
+        <div class="toast-steps">
+          <div class="toast-step">
+            <div class="step-num">1</div>
+            <div class="step-text" id="txt-step1">انتظر انتهاء التحميل ثم اضغط على <b>فتح الملف</b> في شريط الإشعارات</div>
+          </div>
+          <div class="toast-step">
+            <div class="step-num">2</div>
+            <div class="step-text" id="txt-step2">إذا ظهرت رسالة تحذير، اضغط <b>تثبيت على أي حال</b></div>
+          </div>
+          <div class="toast-step">
+            <div class="step-num">3</div>
+            <div class="step-text" id="txt-step3">قد تحتاج إلى تفعيل <b>السماح بمصادر غير معروفة</b> من الإعدادات</div>
+          </div>
+          <div class="toast-step">
+            <div class="step-num">4</div>
+            <div class="step-text" id="txt-step4">اضغط <b>تثبيت</b> وانتظر حتى يكتمل التثبيت ✓</div>
+          </div>
+        </div>
+      </div>
+
       <!-- iOS -->
-      <a class="btn btn-ios" href="https://itmawaran4-rgb.github.io/RC/" target="_blank" rel="noopener" id="btn-ios">
-        <svg class="btn-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <a class="btn btn-ios" href="https://itmawaran4-rgb.github.io/RC/" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24">
           <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
         </svg>
         <div class="btn-text-wrap">
@@ -283,6 +360,7 @@
           <span class="btn-main">iPhone / iOS</span>
         </div>
       </a>
+
     </div>
   </div>
 
@@ -297,7 +375,12 @@
         divider: 'تحميل التطبيق',
         andSub: 'تحميل لـ',
         iosSub: 'فتح لـ',
-        footer: '© 2025 RC Service · جميع الحقوق محفوظة'
+        footer: '© 2025 RC Service · جميع الحقوق محفوظة',
+        toastTitle: 'كيفية تثبيت التطبيق',
+        step1: 'انتظر انتهاء التحميل ثم اضغط على <b>فتح الملف</b> في شريط الإشعارات',
+        step2: 'إذا ظهرت رسالة تحذير، اضغط <b>تثبيت على أي حال</b>',
+        step3: 'قد تحتاج إلى تفعيل <b>السماح بمصادر غير معروفة</b> من الإعدادات',
+        step4: 'اضغط <b>تثبيت</b> وانتظر حتى يكتمل التثبيت ✓'
       },
       ku: {
         dir: 'rtl', lang: 'ku',
@@ -306,7 +389,12 @@
         divider: 'داگرتنی ئەپ',
         andSub: 'داگرتن بۆ',
         iosSub: 'کراوەکردن بۆ',
-        footer: '© 2025 RC Service · هەموو مافەکان پارێزراون'
+        footer: '© 2025 RC Service · هەموو مافەکان پارێزراون',
+        toastTitle: 'چۆنیەتی دامەزراندنی ئەپ',
+        step1: 'چاوەڕێ بە داگرتن تەواو ببێت، پاشان کلیک لەسەر <b>کراوەکردنی فایل</b> لە باری ئاگادارکردنەوە بکە',
+        step2: 'ئەگەر پەیامی ئاگادارکردنەوە دەرکەوت، کلیک لەسەر <b>دامەزراندن بەهەر حاڵێک</b> بکە',
+        step3: 'مەترسە پێویست بێت <b>ڕێدانی سەرچاوە نەناسراوەکان</b> لە ڕێکخستنەکان چالاک بکەیت',
+        step4: 'کلیک لەسەر <b>دامەزراندن</b> بکە و چاوەڕێ بە تەواوبوونی دامەزراندن بکە ✓'
       },
       en: {
         dir: 'ltr', lang: 'en',
@@ -315,11 +403,19 @@
         divider: 'Download the App',
         andSub: 'Download for',
         iosSub: 'Open for',
-        footer: '© 2025 RC Service · All rights reserved'
+        footer: '© 2025 RC Service · All rights reserved',
+        toastTitle: 'How to install the app',
+        step1: 'Wait for the download to finish, then tap <b>Open file</b> in your notification bar',
+        step2: 'If a warning appears, tap <b>Install anyway</b>',
+        step3: 'You may need to enable <b>Unknown sources</b> in your device settings',
+        step4: 'Tap <b>Install</b> and wait for installation to complete ✓'
       }
     };
 
+    let currentLang = 'ar';
+
     function setLang(code) {
+      currentLang = code;
       const t = translations[code];
       document.documentElement.dir = t.dir;
       document.documentElement.lang = t.lang;
@@ -329,15 +425,27 @@
       document.getElementById('txt-and-sub').textContent = t.andSub;
       document.getElementById('txt-ios-sub').textContent = t.iosSub;
       document.getElementById('txt-footer').textContent = t.footer;
+      document.getElementById('txt-toast-title').textContent = t.toastTitle;
+      document.getElementById('txt-step1').innerHTML = t.step1;
+      document.getElementById('txt-step2').innerHTML = t.step2;
+      document.getElementById('txt-step3').innerHTML = t.step3;
+      document.getElementById('txt-step4').innerHTML = t.step4;
 
       document.querySelectorAll('.lang-btn').forEach((btn, i) => {
         btn.classList.toggle('active', ['ar','ku','en'][i] === code);
       });
     }
 
-    // Auto-detect browser language
+    function showInstallGuide() {
+      setTimeout(() => {
+        const toast = document.getElementById('install-toast');
+        toast.classList.add('show');
+        toast.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 1200);
+    }
+
     function detectLang() {
-      const l = (navigator.language || navigator.userLanguage || 'ar').toLowerCase();
+      const l = (navigator.language || 'ar').toLowerCase();
       if (l.startsWith('ku') || l.startsWith('ckb')) return 'ku';
       if (l.startsWith('en')) return 'en';
       return 'ar';
